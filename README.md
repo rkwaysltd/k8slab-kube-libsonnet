@@ -1,6 +1,8 @@
 # kube.libsonnet library for k8slab project
 
-Fix for [kube-libsonnet issue #16](https://github.com/bitnami-labs/kube-libsonnet/issues/16).
+- `kube.libsonnet` Fix for [kube-libsonnet issue #16](https://github.com/bitnami-labs/kube-libsonnet/issues/16).
+- `k8slab.libsonnet` Helper functions for k8slab project.
+- `pp.libsonnet` [Qbec](https://github.com/splunk/qbec) postprocessing.
 
 ## Usage
 
