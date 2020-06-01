@@ -12,7 +12,7 @@ PHONY_UNITTESTS=$(patsubst %.jsonnet,%.unittests,$(UNIT_JSONNET))
 
 tests: req-jsonnet $(PHONY_UNITTESTS) $(PHONY_EVAL_PASS) $(PHONY_EVAL_FAIL)
 
-JSONNET_OPTS=-J ../vendor/ -V qbec.io/tag=testtag
+JSONNET_OPTS=-J ../vendor/ -V qbec.io/tag=testtag -V com.gitlab.ci.cijoburl=test -V com.gitlab.ci.revision=test -V rkways.com/prune-key=test
 
 %.unittests: %.jsonnet
 	@echo "INFO: must PASS: $(<)"
