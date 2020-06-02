@@ -37,5 +37,13 @@ local tag = std.extVar('qbec.io/tag');
           },
         },
       };
-    std.foldl(f, arr, {}),
+    local arrIndexed = [arr[i] { _arrayByKindAndNameIndex:: i } for i in std.range(0, std.length(arr) - 1)];
+    std.foldl(f, arrIndexed, {}),
+
+  /* Transforms object.Kind.Name structure back to array */
+  arrayFromKindAndName(obj)::
+    local f(acc, k) =
+      acc + [obj[k][x] for x in std.objectFields(obj[k])];
+    local unsorted = std.foldl(f, std.objectFields(obj), []);
+    std.sort(unsorted, function(x) x._arrayByKindAndNameIndex),
 }

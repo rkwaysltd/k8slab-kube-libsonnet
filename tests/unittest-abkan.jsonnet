@@ -1,5 +1,6 @@
 local l = import '../k8slab.libsonnet';
 local abkan = l.arrayByKindAndName;
+local fromArr = l.arrayFromKindAndName;
 
 local t = [
   {
@@ -37,6 +38,10 @@ local test_result =
         bar: t[2],
       },
     }
+  ) &&
+  std.assertEqual(
+    fromArr(abkan(t)),
+    t,
   ) &&
   true;
 
