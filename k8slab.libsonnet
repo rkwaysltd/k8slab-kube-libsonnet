@@ -24,4 +24,18 @@ local tag = std.extVar('qbec.io/tag');
        string: _gbp(obj, std.split(path, '.'), defval),
        array: _gbp(obj, path, defval),
      })[pathType],
+
+  /* Transforms array of Kubernetes objects into object.Kind.Name structure */
+  arrayByKindAndName(arr)::
+    local f(acc, e) =
+      acc {
+        [e.kind]+: {
+          [e.metadata.name]+: e {
+            local prev = if '_arrayByKindAndNameAssert' in super then super._arrayByKindAndNameAssert else 0,
+            _arrayByKindAndNameAssert:: prev + 1,
+            assert self._arrayByKindAndNameAssert == 1 : '%s.arrayByKindAndName() detected duplicate object (same Kind:%s and Name:%s)' % [std.thisFile, e.kind, e.metadata.name],
+          },
+        },
+      };
+    std.foldl(f, arr, {}),
 }
