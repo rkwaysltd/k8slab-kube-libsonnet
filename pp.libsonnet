@@ -37,7 +37,7 @@ local common_labels(obj) =
 
 // Deployment, StatefulSet, DaemonSet `kubectl rollout history ...`
 // https://kubernetes.io/docs/tasks/manage-daemon/rollback-daemon-set/
-local change_cause_annotation(obj) = {
+local change_cause_annotation(obj) = obj {
   metadata+: {
     annotations+: {
       'kubernetes.io/change-cause': std.extVar('kubernetes.io/change-cause'),
@@ -65,15 +65,15 @@ local transform_uncommon_per_kind = {
 
 // qbec post-processing function
 function(object)
-  object
-  + (
+  local common_pass = (
     if std.objectHas(transform_uncommon_per_kind, object.kind) then
-      std.foldl(function(acc, fn) fn(acc), transform_uncommon_per_kind[object.kind], {})
+      std.foldl(function(acc, fn) fn(acc), transform_uncommon_per_kind[object.kind], object)
     else
-      std.foldl(function(acc, fn) fn(acc), transform_common, {})
-  )
-  + (
+      std.foldl(function(acc, fn) fn(acc), transform_common, object)
+  );
+  local per_kind_pass = (
     if std.objectHas(transform_per_kind, object.kind) then
-      std.foldl(function(acc, fn) fn(acc), transform_per_kind[object.kind], {})
-    else {}
-  )
+      std.foldl(function(acc, fn) fn(acc), transform_per_kind[object.kind], common_pass)
+    else common_pass
+  );
+  per_kind_pass
